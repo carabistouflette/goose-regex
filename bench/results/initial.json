@@ -1,0 +1,52 @@
+{
+  "head": "2adaa74bfb9f6ad88f63890215a947ed924d9116",
+  "dirty": false,
+  "files_sha256": {
+    "regex.goose": "7d0e9987e4d81638f75a9abb74d53b61b3f442192134883cfb1fb8866fe170b9",
+    "regex.build": "51eb595c859ed802d00e8980b5911cd191f1a3c55349e4663bd99ee471b193ce",
+    "CMakeLists.txt": "07fa13acb5228618f3456e996e15991fd86dbee8623ddb0802542d1a08d427e9",
+    "native/regex.c": "3e58e6a0e1ef58f4653dc1621fd273a5a16b2aded66093cf3595daa328317e40",
+    "native/regex.h": "77deb4243058cdbd4becf44e0eb02c0cf20b487efc8695905186bfe6ac64f82d",
+    "bench/bench.goose": "cbb2e50d92c6fa988846d333e4a4eaca022ad31489dfaf0d03026b785d7a1e1d",
+    "bench/measure.py": "13535c46032ba2a8d189dc35643471534f63e5c6e25e3e0c55ae5ece5c2dc5e8"
+  },
+  "compiler_pin": "eadca409f68210893f366e60d0c2f0dc29a339be",
+  "goose_sha256": "0ab02200b44f064869ea019c760929baad69c1c3d6dbe566a3d0eea2e321b87d",
+  "binary_sha256": "39a2f61b5b6e24624ac57d8890960ea52e8fcdbccee9f922d5901e81e203996f",
+  "cc": "cc (GCC) 16.2.1 20260810\nCopyright (C) 2026 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.",
+  "pcre2": "10.49",
+  "platform": "Linux-7.2.11-arch1-1-x86_64-with-glibc2.44",
+  "cpu": "",
+  "affinity": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ],
+  "iterations": 10000,
+  "samples_ns": {
+    "reuse": [
+      12157145,
+      16957236,
+      13539629,
+      15768416,
+      16071414,
+      15889247,
+      13758704
+    ],
+    "compile": [
+      36080963,
+      31951048,
+      35612127,
+      35386563,
+      34573740,
+      34400086,
+      35279147
+    ]
+  },
+  "limits": "Process startup included; one short diagnostic fixture; shared host; no cross-library or general speed claim."
+}

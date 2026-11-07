@@ -25,6 +25,8 @@ test:
 	mkdir -p .build
 	"$(GOOSE)" build tests/api.goose --standalone -O2 --cc "$(CC)" -o .build/api
 	./.build/api
+	"$(GOOSE)" build tests/bounds.goose --standalone -O2 --cc "$(CC)" -o .build/bounds
+	./.build/bounds
 	$(MAKE) native oracle
 test-debug:
 	"$(GOOSE)" run tests/api.goose --debug
@@ -32,6 +34,8 @@ test-debug:
 	mkdir -p .build
 	"$(GOOSE)" build tests/api.goose --standalone --debug --cc "$(CC)" -o .build/api-debug
 	./.build/api-debug
+	"$(GOOSE)" build tests/bounds.goose --standalone --debug --cc "$(CC)" -o .build/bounds-debug
+	./.build/bounds-debug
 native:
 	mkdir -p .build
 	$(CC) $(CFLAGS) -DGR_TEST -O2 tests/native.c native/regex.c $(PCRE) -o .build/native
