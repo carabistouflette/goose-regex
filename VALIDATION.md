@@ -35,8 +35,9 @@ Implementation commit `2adaa74bfb9f6ad88f63890215a947ed924d9116` passed public
 Goose checks, debug/optimized execution, the 15,984-search oracle, GCC/Clang native
 ASan/UBSan and 10,000 seeded libFuzzer executions. The exact benchmark fixture
 and raw samples are retained in `bench/results/initial.json`; its recorded source
-hashes identify the measured code. Documentation/test-target changes after that
-commit do not alter those measured sources. There is no hosted CI result.
+hashes identify the measured code. This initial fixture is historical. The expanded benchmark changes measured
+benchmark sources and is recorded separately in `bench/results/expanded.json`,
+with its own commit identity and source hashes. There is no hosted CI result.
 
 Two independent design reviews and three independent implementation reviews
 covered ownership/resource limits, native safety, interface behavior and tests.
