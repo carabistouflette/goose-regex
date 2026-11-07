@@ -1,0 +1,145 @@
+{
+  "head": "97ef38aebbcf39baa2aca9b0be0dd8839f5d94c4",
+  "dirty": false,
+  "files_sha256": {
+    "regex.goose": "7d0e9987e4d81638f75a9abb74d53b61b3f442192134883cfb1fb8866fe170b9",
+    "regex.build": "51eb595c859ed802d00e8980b5911cd191f1a3c55349e4663bd99ee471b193ce",
+    "CMakeLists.txt": "07fa13acb5228618f3456e996e15991fd86dbee8623ddb0802542d1a08d427e9",
+    "native/regex.c": "3e58e6a0e1ef58f4653dc1621fd273a5a16b2aded66093cf3595daa328317e40",
+    "native/regex.h": "77deb4243058cdbd4becf44e0eb02c0cf20b487efc8695905186bfe6ac64f82d",
+    "bench/bench.goose": "776c918369f05777bcd2a577026810f9b28f4268ef85c2653d5375fad0b666a0",
+    "bench/measure.py": "f97bcfe8199b8c6d93899740933ddbe6592cbf18e04076e63c5a2a281c4d50e7"
+  },
+  "compiler_pin": "eadca409f68210893f366e60d0c2f0dc29a339be",
+  "goose_sha256": "0ab02200b44f064869ea019c760929baad69c1c3d6dbe566a3d0eea2e321b87d",
+  "binary_sha256": "1fc7d00c3802ba3a471a8fc17bca544aa9ac100b0b1621a42267d4a553c81564",
+  "cc": "cc (GCC) 16.2.1 20260810\nCopyright (C) 2026 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.",
+  "pcre2": "10.49",
+  "platform": "Linux-7.2.11-arch1-1-x86_64-with-glibc2.44",
+  "cpu": "",
+  "affinity": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ],
+  "workloads": {
+    "diagnostic": {
+      "iterations": 10000,
+      "checksum": 440000
+    },
+    "large": {
+      "iterations": 128,
+      "checksum": 33554432
+    },
+    "no-match": {
+      "iterations": 128,
+      "checksum": 0
+    },
+    "captures": {
+      "iterations": 10000,
+      "checksum": 320000
+    },
+    "hostile": {
+      "iterations": 1000,
+      "checksum": 1000
+    }
+  },
+  "samples_ns": {
+    "diagnostic.reuse": [
+      16164117,
+      16041399,
+      15762368,
+      15768653,
+      14468341,
+      14348145,
+      14279549
+    ],
+    "diagnostic.compile": [
+      32773648,
+      37809225,
+      38596630,
+      37590322,
+      32875560,
+      34030422,
+      30012045
+    ],
+    "large.reuse": [
+      28279347,
+      30528323,
+      32206353,
+      26459467,
+      25083582,
+      25958930,
+      26600221
+    ],
+    "large.compile": [
+      29638049,
+      25701963,
+      30426892,
+      25839465,
+      30724059,
+      30840683,
+      25707798
+    ],
+    "no-match.reuse": [
+      28794448,
+      32251379,
+      26203972,
+      35107939,
+      29435788,
+      30813036,
+      26251826
+    ],
+    "no-match.compile": [
+      27314705,
+      26176427,
+      31679247,
+      25886761,
+      28775410,
+      25921487,
+      26418957
+    ],
+    "captures.reuse": [
+      17904824,
+      16667875,
+      17711256,
+      16633220,
+      17329221,
+      16334975,
+      16548939
+    ],
+    "captures.compile": [
+      85535059,
+      94391299,
+      91891693,
+      92092891,
+      95501094,
+      92778170,
+      93240463
+    ],
+    "hostile.reuse": [
+      30561575,
+      30142194,
+      30632328,
+      27171069,
+      31672504,
+      30354340,
+      31034785
+    ],
+    "hostile.compile": [
+      31780127,
+      30478655,
+      31127806,
+      32137709,
+      32788853,
+      32449635,
+      31849663
+    ]
+  },
+  "limits": "Process startup included; five fixed fixtures; shared host; no cross-library or general speed claim."
+}
