@@ -12,8 +12,10 @@ parallel. Slots are never reused with the same token.
 
 PCRE2 8-bit interpreter, no JIT. UTF/UCP activation is prohibited. Patterns and
 subjects accept embedded NUL. Captures are half-open byte offsets; unmatched
-captures are (-1,-1). Capture zero is the whole match. Outputs reset before each
-operation, and only complete results are published. No input bytes are owned by
+captures are (-1,-1). Capture zero is the whole match. Structurally valid outputs
+reset before handle/offset/limit validation, and only complete results are
+published. Unsupported output lengths, invalid native slices and overlapping
+input/output storage return InvalidInput without modifying storage. No input bytes are owned by
 the interface. PCRE2 match storage may retain the last subject address internally;
 no operation reads it after find returns.
 
