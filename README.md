@@ -1,7 +1,7 @@
 # goose-regex
 
 Reusable byte regular expressions for [Goose](https://github.com/aardappel/goose),
-using PCRE2's 8-bit interpreter. Apache-2.0. Experimental; no tagged release yet.
+using PCRE2's 8-bit interpreter. Apache-2.0. Experimental alpha interface; publication candidate for `v0.1.0-alpha.1`.
 
 Compile once, search repeatedly, and copy capture offsets into caller storage.
 Pattern and input bytes can contain NUL. UTF/UCP activation is disabled. No JIT,
@@ -15,7 +15,14 @@ development files, Make, Python 3.11+, Git and POSIX threads. On Debian/Ubuntu:
 Clang is additionally needed for fuzzing. Linux x86-64 is the initially tested
 platform; other platforms are unqualified.
 
-From this standalone checkout:
+Clone the standalone repository:
+
+```sh
+git clone https://github.com/carabistouflette/goose-regex.git
+cd goose-regex
+```
+
+Then:
 
 ```sh
 make setup
@@ -26,7 +33,10 @@ make check test test-debug
 `make setup` fetches and builds the exact upstream commit in GOOSE_REVISION.
 An existing matching compiler can be supplied with `GOOSE=/absolute/path/to/goose`.
 Native source fingerprints invalidate Goose's package cache; `make format`
-refreshes them and `make check` rejects stale fingerprints.
+refreshes them and `make check` rejects stale fingerprints. This fingerprint
+covers repository sources, not the installed PCRE2. After changing PCRE2 paths,
+versions or linkage, rebuild with a fresh `GOOSE_HOME` directory; otherwise Goose
+can reuse a package built against a previous backend.
 
 ## Example
 
@@ -111,6 +121,7 @@ never accesses it after return or exposes it.
 
 ```sh
 make native
+make test-minimum
 make sanitize CC=clang
 make sanitize CC=gcc
 make fuzz FUZZ_RUNS=10000

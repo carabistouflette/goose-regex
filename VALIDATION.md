@@ -2,8 +2,8 @@
 
 The supported starting point is Linux x86-64, the exact Goose commit in
 GOOSE_REVISION, and system PCRE2 >=10.42. The initial local run used PCRE2 10.49.
-CI configuration is supplied but hosted CI has not run for this local repository.
-There is no published release or public registration yet.
+The release candidate requires successful exact-commit hosted CI before tagging.
+Recorded local evidence is distinct from hosted CI and public registration.
 
 - `make check`: native fingerprint, Goose formatting and public source checks.
 - `make test test-debug`: public Goose API/boundary tests, diagnostic consumer,
@@ -44,3 +44,15 @@ Findings led to a POSIX macro fix, a precise structural-invalid output contract,
 search allocation/quota tests, deterministic same-handle Busy coverage, wider
 fuzz framing and corrected token-security wording. Reviews and finite passing
 tests are evidence, not an exhaustive security audit.
+
+## Minimum backend qualification
+
+`make test-minimum` downloads the official PCRE2 10.42 source archive, verifies
+SHA256 `8d36cd8cb6ea2a4c2bb358ff6411b0c788633a2a45dabbf1aeb4b701d1b5e840`,
+builds a private PIC static backend, restricts pkg-config to that installation,
+and uses a new Goose cache. Public debug/optimized tests, native tests, Clang
+ASan/UBSan and all oracle searches pass locally. The native test prints the linked
+backend version; local output was `10.42 2022-12-11`. Native CMake caches resolve
+the private include/archive paths, and standalone public binaries have no dynamic
+PCRE2 dependency. This guards against accidental reuse of system 10.49 packages.
+10.42 is a compatibility floor, not a recommendation to downgrade security fixes.

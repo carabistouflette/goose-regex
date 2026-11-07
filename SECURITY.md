@@ -1,8 +1,11 @@
 # Security
 
-This local experimental library has no public vulnerability-reporting endpoint
-or supported release yet. Do not post exploit details in public issues. Before
-publication, establish and verify private reporting for the public repository.
+Report suspected vulnerabilities through
+[GitHub private vulnerability reporting](https://github.com/carabistouflette/goose-regex/security/advisories/new).
+Private reporting is enabled for this repository. Include the affected commit,
+PCRE2/Goose versions, platform and a small reproducer. Keep exploit details out of
+public issues until a fix is available. The initial alpha has no stability or
+long-term support guarantee.
 
 The native wrapper uses checked tokens, per-handle leases, quota-controlled
 PCRE2 allocations, nesting/capture/input limits, byte matching and explicit

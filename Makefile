@@ -54,3 +54,9 @@ oracle:
 	python3 tests/oracle.py
 bench:
 	python3 bench/measure.py --goose "$(abspath $(GOOSE))"
+
+.PHONY: test-minimum
+test-minimum:
+	./scripts/setup-pcre2-minimum.sh
+	test "$$(PKG_CONFIG_LIBDIR="$(CURDIR)/.build/pcre2-10.42/install/lib/pkgconfig" pkg-config --modversion libpcre2-8)" = 10.42
+	PKG_CONFIG_LIBDIR="$(CURDIR)/.build/pcre2-10.42/install/lib/pkgconfig" GOOSE_HOME="$$(mktemp -d "$(CURDIR)/.build/goose-minimum-XXXXXX")" $(MAKE) check test test-debug sanitize CC=clang

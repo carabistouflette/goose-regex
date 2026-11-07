@@ -16,3 +16,10 @@ jobs:
       - run: make sanitize CC=gcc
       - run: make fuzz FUZZ_RUNS=10000
       - run: make bench
+      - run: make test-minimum
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: benchmark-${{ github.sha }}
+          path: .build/benchmark.json
+          include-hidden-files: true
+          if-no-files-found: error

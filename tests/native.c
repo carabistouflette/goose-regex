@@ -138,6 +138,8 @@ static void search_quota(void) {
     assert(compile("a",m)==GR_OK && gr_close(m[0])==GR_OK);
 }
 int main(void) {
+    char version[64]; assert(pcre2_config(PCRE2_CONFIG_VERSION, version)>0);
+    printf("linked PCRE2: %s\n",version);
     basic(); failures(); contention(); search_quota();
     pthread_t threads[8];
     for(int i=0;i<8;++i) assert(!pthread_create(&threads[i],NULL,worker,NULL));

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # SPDX-License-Identifier: Apache-2.0
-"""Retain raw process timings for one diagnostic workload; no speed assertions."""
+"""Retain raw process timings for five byte-regex workloads; no speed assertions."""
 import argparse
 import hashlib
 import json
@@ -29,17 +29,20 @@ def main():
     binary = ROOT / '.build/bench'
     binary.parent.mkdir(exist_ok=True)
     subprocess.run([options.goose, 'build', 'bench/bench.goose', '--standalone', '-O2', '--cc', 'cc', '-o', str(binary)], check=True)
-    samples = {'reuse': [], 'compile': []}
-    for mode in samples:
-        subprocess.run([str(binary), mode], check=True, stdout=subprocess.DEVNULL)
+    workloads = {'diagnostic': (10000, 440000), 'large': (128, 33554432),
+                 'no-match': (128, 0), 'captures': (10000, 320000), 'hostile': (1000, 1000)}
+    cases = [(workload, mode) for workload in workloads for mode in ('reuse', 'compile')]
+    samples = {f'{workload}.{mode}': [] for workload, mode in cases}
+    for workload, mode in cases:
+        subprocess.run([str(binary), mode, workload], check=True, stdout=subprocess.DEVNULL)
     for index in range(options.runs):
-        for mode in (['reuse', 'compile'] if index % 2 == 0 else ['compile', 'reuse']):
+        for workload, mode in (cases if index % 2 == 0 else list(reversed(cases))):
             start = time.perf_counter_ns()
-            result = subprocess.check_output([str(binary), mode], text=True).strip()
+            result = subprocess.check_output([str(binary), mode, workload], text=True).strip()
             elapsed = time.perf_counter_ns() - start
-            if result != '440000':
-                raise RuntimeError(f'unexpected checksum: {result}')
-            samples[mode].append(elapsed)
+            if result != str(workloads[workload][1]):
+                raise RuntimeError(f'unexpected checksum for {workload}: {result}')
+            samples[f'{workload}.{mode}'].append(elapsed)
     paths = ['regex.goose', 'regex.build', 'CMakeLists.txt', 'native/regex.c', 'native/regex.h', 'bench/bench.goose', 'bench/measure.py']
     report = {'head': capture('git', 'rev-parse', 'HEAD'),
               'dirty': bool(capture('git', 'status', '--porcelain', '--untracked-files=no')),
@@ -50,8 +53,8 @@ def main():
               'cc': capture('cc', '--version'), 'pcre2': capture('pkg-config', '--modversion', 'libpcre2-8'),
               'platform': platform.platform(), 'cpu': platform.processor(),
               'affinity': sorted(os.sched_getaffinity(0)),
-              'iterations': 10000, 'samples_ns': samples,
-              'limits': 'Process startup included; one short diagnostic fixture; shared host; no cross-library or general speed claim.'}
+              'workloads': {key: {'iterations': value[0], 'checksum': value[1]} for key, value in workloads.items()}, 'samples_ns': samples,
+              'limits': 'Process startup included; five fixed fixtures; shared host; no cross-library or general speed claim.'}
     Path(options.output).parent.mkdir(parents=True, exist_ok=True)
     Path(options.output).write_text(json.dumps(report, indent=2) + '\n')
     print(options.output)
