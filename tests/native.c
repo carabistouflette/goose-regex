@@ -48,6 +48,24 @@ static void failures(void) {
         assert(compile("x",m)==GR_OK && gr_close(m[0])==GR_OK);
     }
     assert(success);
+    /* First search can allocate retained backtracking frames. Failure must
+     * leave empty output and permit retry on the same live handle. */
+    success=0;
+    for(int site=0;site<100;++site) {
+        assert(compile("(a+)(b)?",m)==GR_OK);
+        gr_test_fail_after(site);
+        int rc=(int)gr_find(m[0],bytes("aaa"),0,(gr_ints){out,128},(gr_ints){f,3});
+        gr_test_fail_after(-1);
+        if(rc==GR_OK) success=1;
+        else {
+            assert(rc==GR_MEMORY && !f[0]);
+            for(int i=0;i<128;++i) assert(out[i]==-1);
+            assert(gr_find(m[0],bytes("aaa"),0,(gr_ints){out,128},(gr_ints){f,3})==GR_OK && f[0]);
+        }
+        assert(gr_close(m[0])==GR_OK);
+        if(success) break;
+    }
+    assert(success);
     config[1]=1;
     assert(compile("x",m)==GR_LIMIT && m[0]==0);
     config[1]=8388608;
