@@ -7,6 +7,7 @@
 #include <string.h>
 #include "../native/regex.h"
 extern void gr_test_fail_after(int64_t);
+extern void gr_test_find_hook(void (*)(void));
 static gr_bytes bytes(const char *p) { return (gr_bytes){(const uint8_t *)p, (int64_t)strlen(p)}; }
 static int64_t config[4] = {1048576,8388608,1000000,1000};
 static int compile(const char *p, int64_t *meta) {
@@ -94,8 +95,50 @@ static void *worker(void *unused) {
     }
     return NULL;
 }
+static pthread_mutex_t gate_mutex = PTHREAD_MUTEX_INITIALIZER;
+static pthread_cond_t gate_cond = PTHREAD_COND_INITIALIZER;
+static int entered, resume_search;
+static void hold_search(void) {
+    pthread_mutex_lock(&gate_mutex);
+    entered=1; pthread_cond_broadcast(&gate_cond);
+    while(!resume_search) pthread_cond_wait(&gate_cond,&gate_mutex);
+    pthread_mutex_unlock(&gate_mutex);
+}
+static void *held_worker(void *opaque) {
+    int64_t token=*(int64_t *)opaque, out[2], meta[3];
+    assert(gr_find(token,bytes("a"),0,(gr_ints){out,2},(gr_ints){meta,3})==GR_OK && meta[0]);
+    return NULL;
+}
+static void contention(void) {
+    int64_t m[4], f[3], out[2];
+    assert(compile("a",m)==GR_OK);
+    gr_test_find_hook(hold_search);
+    pthread_t thread; assert(!pthread_create(&thread,NULL,held_worker,&m[0]));
+    pthread_mutex_lock(&gate_mutex);
+    while(!entered) pthread_cond_wait(&gate_cond,&gate_mutex);
+    pthread_mutex_unlock(&gate_mutex);
+    assert(gr_close(m[0])==GR_BUSY);
+    assert(gr_find(m[0],bytes("a"),0,(gr_ints){out,2},(gr_ints){f,3})==GR_BUSY);
+    assert(!f[0] && out[0]==-1 && out[1]==-1);
+    pthread_mutex_lock(&gate_mutex);
+    resume_search=1; pthread_cond_broadcast(&gate_cond);
+    pthread_mutex_unlock(&gate_mutex);
+    assert(!pthread_join(thread,NULL)); gr_test_find_hook(NULL);
+    assert(gr_find(m[0],bytes("a"),0,(gr_ints){out,2},(gr_ints){f,3})==GR_OK && f[0]);
+    assert(gr_close(m[0])==GR_OK);
+}
+static void search_quota(void) {
+    int64_t m[4], f[3], out[2];
+    config[1]=4096;
+    assert(compile("a",m)==GR_OK);
+    assert(gr_find(m[0],bytes("a"),0,(gr_ints){out,2},(gr_ints){f,3})==GR_LIMIT);
+    assert(!f[0] && out[0]==-1 && out[1]==-1);
+    assert(gr_close(m[0])==GR_OK);
+    config[1]=8388608;
+    assert(compile("a",m)==GR_OK && gr_close(m[0])==GR_OK);
+}
 int main(void) {
-    basic(); failures();
+    basic(); failures(); contention(); search_quota();
     pthread_t threads[8];
     for(int i=0;i<8;++i) assert(!pthread_create(&threads[i],NULL,worker,NULL));
     for(int i=0;i<8;++i) assert(!pthread_join(threads[i],NULL));

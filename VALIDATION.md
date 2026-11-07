@@ -18,14 +18,13 @@ There is no published release or public registration yet.
   and every valid start position (15,984 searches). This does not establish
   equivalence for all PCRE2 syntax or compare resource-limit behavior.
 - `make fuzz`: Clang libFuzzer with ASan/UBSan, fixed seed, seeded binary/malformed/
-  hostile-pattern corpus, maximum generated input 1,024 bytes and finite run
+  hostile-pattern corpus, maximum generated input 32,768 bytes and finite run
   count. Crash files land in the current directory; keep and regress failures.
 - `make bench`: optimized standalone consumer, checksum checked, warmups and raw
   samples with source/backend/compiler identities. See bench/README.md.
 
 These are finite checks. No sustained fuzzing, exhaustive allocation-site proof,
 Windows/macOS qualification, hard deadline, portable implementation, cryptographic
-security guarantee or universal performance claim is implied. Same-handle Busy
-behavior is specified; independent-handle stress is not a complete concurrent
-schedule exploration. PCRE2's newer installed version can accept syntax absent
+security guarantee or universal performance claim is implied. Deterministic same-handle Busy and independent-handle stress tests are not a
+complete concurrent schedule exploration. PCRE2's newer installed version can accept syntax absent
 from 10.42. Version changes must be retested.

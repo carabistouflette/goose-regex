@@ -57,7 +57,8 @@ fn main() {
   `error=None` means no match. `pairs` is zero unless a match succeeds.
 - `close(pattern)` returns `Error`. Call once for every successful compile,
   including after later search failures. Copies alias the resource; closing
-  invalidates every copy. Stale, forged and already-closed tokens are rejected.
+  invalidates every copy. Invalid, stale and already-closed tokens are rejected. Tokens are predictable
+  process-local identifiers, not security capabilities.
   Do not persist tokens or modify handle fields. The native token is authoritative;
   modifying `pairs` does not change required output capacity.
 

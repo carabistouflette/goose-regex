@@ -27,6 +27,8 @@ static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 #ifdef GR_TEST
 /* Allocation-site injection, configured only while test calls are quiescent. */
 static _Thread_local int64_t fail_after = -1;
+static void (*find_hook)(void);
+void gr_test_find_hook(void (*hook)(void)) { find_hook = hook; }
 void gr_test_fail_after(int64_t n) { fail_after = n; }
 #endif
 static void *allocate(PCRE2_SIZE n, void *opaque) {
@@ -167,6 +169,9 @@ int64_t gr_find(int64_t token, gr_bytes subject, int64_t start, gr_ints offsets,
     if (start < 0 || start > subject.len) return GR_INPUT;
     int error; slot *s = lease(token, &error);
     if (!s) return error;
+#ifdef GR_TEST
+    if (find_hook) find_hook();
+#endif
     int result = GR_OK;
     if (subject.len > s->input_limit) result = GR_LIMIT;
     else if (offsets.len < (int64_t)s->pairs * 2) result = GR_INPUT;

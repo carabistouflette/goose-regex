@@ -44,7 +44,7 @@ fuzz:
 	mkdir -p .build/corpus
 	python3 scripts/fuzz-seeds.py
 	$(FUZZ_CC) $(CFLAGS) -O1 -g -fsanitize=fuzzer,address,undefined tests/fuzz.c native/regex.c $(PCRE) -o .build/fuzz
-	./.build/fuzz -runs=$(FUZZ_RUNS) -seed=491 -max_len=1024 -timeout=5 .build/corpus
+	./.build/fuzz -runs=$(FUZZ_RUNS) -seed=491 -max_len=32768 -timeout=5 .build/corpus
 oracle:
 	mkdir -p .build
 	python3 tests/oracle.py
