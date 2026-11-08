@@ -6,8 +6,7 @@
 int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
     if (size<2 || size>32768) return 0;
     size_t payload=size-2;
-    size_t split=(size_t)data[0]*256+data[1];
-    if (split>payload) return 0;
+    size_t split=((size_t)data[0]*256+data[1]) % (payload+1);
     data+=2;
     size=payload;
     int64_t config[4]={32768,1048576,1000,100}, m[4], f[3], out[128];
