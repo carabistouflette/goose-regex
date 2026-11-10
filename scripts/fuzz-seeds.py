@@ -1,7 +1,12 @@
 #!/usr/bin/env python3
 # SPDX-License-Identifier: Apache-2.0
+import argparse
 from pathlib import Path
-root = Path(__file__).resolve().parents[1] / '.build/corpus'
+
+parser = argparse.ArgumentParser()
+parser.add_argument('--corpus', type=Path,
+                    default=Path(__file__).resolve().parents[1] / '.build/corpus')
+root = parser.parse_args().corpus
 root.mkdir(parents=True, exist_ok=True)
 for index, (pattern, subject) in enumerate([
     (b'(a+)(b)?', b'xxaaa'), (b'(?=(ab))a', b'ab'),
